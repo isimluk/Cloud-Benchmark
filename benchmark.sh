@@ -6,17 +6,19 @@
 # Creation date: 03.25.21, Joshua Hiller @ CrowdStrike
 #
 
-base_url=https://raw.githubusercontent.com/isimluk/Cloud-Benchmark/test/
+base_url=https://raw.githubusercontent.com/isimluk/Cloud-Benchmark/test
 
 audit(){
     CLOUD="$1"
     echo "This is ${CLOUD}"
     cloud=$(echo "$CLOUD" | tr '[:upper:]' '[:lower:]')
 
-    curl -o requirements.txt "${base_url}/${CLOUD}/requirements.txt"
-    python3 -m pip install -r requirements.txt
+    curl -s -o requirements.txt "${base_url}/${CLOUD}/requirements.txt"
+    echo "Installing python dependencies for communicating with ${CLOUD}"
+
+    python3 -m pip install --disable-pip-version-check -qq -r requirements.txt
     file="${cloud}_cspm_benchmark.py"
-    curl -o "${file}" "${base_url}/${CLOUD}/${file}"
+    curl -s -o "${file}" "${base_url}/${CLOUD}/${file}"
     python3 "${file}"
 }
 
